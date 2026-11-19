@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b1020">
+<title>Cryptography Studio | Classical Ciphers</title>
+<style>
+:root{color-scheme:dark;--bg:#080d1b;--surface:#111a2e;--surface2:#17233c;--line:#263653;--text:#edf3ff;--muted:#9aabc8;--accent:#8b7cff;--cyan:#5de1e6;--good:#73e0ae;--shadow:0 24px 70px #0005}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 15% 0%,#1c2852 0,transparent 42%),radial-gradient(ellipse at 100% 20%,#153d4c 0,transparent 32%),var(--bg);color:var(--text);font:15px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}.shell{max-width:1120px;margin:auto;padding:28px 22px 56px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:48px}.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.02em}.brandmark{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(135deg,var(--accent),#4bcbd8);color:#08101e;font-size:21px;box-shadow:0 8px 28px #7568ff55}.top-tag{border:1px solid #354766;background:#101a2d;color:#bdcbe2;padding:7px 12px;border-radius:99px;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.hero{max-width:760px;margin:0 auto 32px;text-align:center}.eyebrow{color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.hero h1{font-size:clamp(2.3rem,6vw,4.2rem);line-height:1.06;letter-spacing:-.055em;margin:12px 0 14px}.gradient{background:linear-gradient(90deg,#fff,var(--cyan),#b7aaff);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{color:var(--muted);font-size:1.05rem;margin:0 auto;max-width:620px}
+.workspace{display:grid;grid-template-columns: minmax(0,1.25fr) minmax(280px,.75fr);gap:20px;align-items:start}.card{background:linear-gradient(160deg,#15213aee,#10182aee);border:1px solid #2a3b59;border-radius:22px;box-shadow:var(--shadow);overflow:hidden}.card-head{padding:22px 24px 16px;border-bottom:1px solid #263653}.card-head h2{margin:0;font-size:1.15rem}.card-head p{margin:4px 0 0;color:var(--muted);font-size:.9rem}.card-body{padding:22px 24px 24px}
+.cipher-switch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}.cipher-option{border:1px solid var(--line);border-radius:15px;background:#0d1628;color:var(--muted);padding:14px;text-align:left;cursor:pointer;transition:.2s}.cipher-option:hover{border-color:#7787ad;transform:translateY(-1px)}.cipher-option.active{background:linear-gradient(135deg,#332c68,#1d5261);border-color:#887dff;color:white;box-shadow:0 8px 24px #655bff25}.cipher-option strong{display:block;font-size:.98rem;color:inherit}.cipher-option span{display:block;font-size:.78rem;opacity:.8;margin-top:3px}.cipher-icon{font-size:20px;margin-bottom:5px;display:block}
+label{display:block;font-size:.88rem;font-weight:700;color:#dce6f8;margin:15px 0 8px}.field{width:100%;border:1px solid #334563;background:#0a1324;color:var(--text);border-radius:13px;padding:13px 15px;outline:none;transition:.2s}.field:focus{border-color:var(--accent);box-shadow:0 0 0 3px #8b7cff26}textarea.field{min-height:142px;resize:vertical}.field::placeholder{color:#657895}
+.key-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.key-note{border:1px solid #2a3b59;background:#0d1729;border-radius:13px;padding:12px 14px;align-self:end;color:var(--muted);font-size:.82rem;min-height:74px}.key-note b{color:#e7edff;display:block;margin-bottom:2px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.btn{border:0;border-radius:12px;padding:12px 19px;font-weight:800;cursor:pointer;transition:.18s}.btn:hover{transform:translateY(-1px);filter:brightness(1.08)}.btn-primary{background:linear-gradient(100deg,#8b7cff,#56cdd8);color:#08101e;box-shadow:0 8px 22px #7268ff33}.btn-secondary{background:#1a2943;border:1px solid #344866;color:#dce8ff}.btn-quiet{background:transparent;border:1px solid #344866;color:var(--muted)}
+.result-card{margin-top:20px;border:1px solid #3b4774;background:linear-gradient(140deg,#171e3a,#10232e);border-radius:16px;padding:17px}.result-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}.result-top label{margin:0;color:var(--cyan);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase}.result{min-height:62px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:1.08rem;font-weight:650;color:#fff}.status{min-height:20px;margin:9px 0 0;color:var(--good);font-size:.82rem}
+.side-card{padding:22px 22px 20px}.side-card h3{margin:0 0 8px;font-size:1.05rem}.side-card p{margin:0;color:var(--muted);font-size:.9rem}.diagram{display:flex;align-items:center;justify-content:center;gap:8px;margin:20px 0}.node{padding:10px 12px;border-radius:10px;background:#202d4b;border:1px solid #3b4d70;font-size:.8rem;font-weight:750}.arrow{color:var(--cyan);font-size:20px}.mini-title{color:#c9d5ec;font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:800;margin:20px 0 8px}.facts{display:grid;gap:10px}.fact{display:flex;gap:10px;color:var(--muted);font-size:.85rem}.dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);margin-top:8px;flex:none}
+.notice{margin-top:20px;border:1px solid #665b38;background:#2823158c;color:#d9cda7;border-radius:14px;padding:13px 15px;font-size:.82rem}.notice b{color:#f5df9d}
+.footer{text-align:center;color:#71829e;font-size:.8rem;margin-top:32px}
+.hidden{display:none!important}
+@media(max-width:820px){.workspace{grid-template-columns:1fr}.topbar{margin-bottom:34px}}
+@media(max-width:520px){.shell{padding:20px 14px 38px}.topbar{margin-bottom:30px}.top-tag{display:none}.card-body,.card-head{padding-left:17px;padding-right:17px}.cipher-switch{grid-template-columns:1fr 1fr}.cipher-option{padding:11px}.key-row{grid-template-columns:1fr}.key-note{min-height:0}.actions .btn{flex:1}.hero p{font-size:.95rem}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="topbar">
+    <div class="brand"><div class="brandmark">⌘</div><span>CRYPT<span style="color:var(--cyan)">O</span> LAB</span></div>
+    <div class="top-tag">Interactive learning · Classical cryptography</div>
+  </nav>
+
+  <section class="hero">
+    <div class="eyebrow">Understand the foundations</div>
+    <h1>Explore the art of <span class="gradient">secret writing.</span></h1>
+    <p>Experiment with two classic encryption techniques. Write a message, set your key, and watch how plaintext becomes ciphertext.</p>
+  </section>
+
+  <main class="workspace">
+    <section class="card">
+      <div class="card-head"><h2>Encryption workspace</h2><p>Choose a method and transform your message.</p></div>
+      <div class="card-body">
+        <div class="cipher-switch" role="tablist" aria-label="Choose cipher">
+          <button class="cipher-option active" data-cipher="caesar" role="tab" aria-selected="true">
+            <span class="cipher-icon">↻</span><strong>Caesar Cipher</strong><span>Substitution technique</span>
+          </button>
+          <button class="cipher-option" data-cipher="rail" role="tab" aria-selected="false">
+            <span class="cipher-icon">▥</span><strong>Rail Fence</strong><span>Transposition technique</span>
+          </button>
+        </div>
+
+        <label for="message">Your message</label>
+        <textarea class="field" id="message" placeholder="Enter text to encrypt or decrypt...">HELLO WORLD</textarea>
+
+        <div id="caesarFields">
+          <div class="key-row">
+            <div><label for="shift">Shift key</label><input class="field" id="shift" type="number" min="0" max="25" value="3"></div>
+            <div class="key-note"><b>How it works</b>Each letter moves forward or backward through the alphabet.</div>
+          </div>
+        </div>
+        <div id="railFields" class="hidden">
+          <div class="key-row">
+            <div><label for="rails">Number of rails</label><input class="field" id="rails" type="number" min="2" max="20" value="3"></div>
+            <div class="key-note"><b>How it works</b>Letters are written in a zigzag and read row by row.</div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="encrypt">Encrypt message ↗</button>
+          <button class="btn btn-secondary" id="decrypt">Decrypt</button>
+          <button class="btn btn-quiet" id="clear">Clear</button>
+        </div>
+
+        <div class="result-card">
+          <div class="result-top"><label for="output">Output</label><button class="btn btn-secondary" id="copy" style="padding:7px 11px;font-size:.78rem">Copy</button></div>
+          <div class="result" id="output" aria-live="polite">Your result will appear here.</div>
+          <p class="status" id="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <aside>
+      <section class="card side-card">
+        <h3 id="conceptTitle">Substitution cipher</h3>
+        <p id="conceptText">A substitution cipher replaces each letter with another letter. The original letter positions remain unchanged.</p>
+        <div class="diagram" id="diagram"><div class="node">A B C</div><div class="arrow">→</div><div class="node">D E F</div></div>
+        <div class="mini-title">Key concepts</div>
+        <div class="facts" id="facts">
+          <div class="fact"><span class="dot"></span><span>Letters are replaced, not rearranged.</span></div>
+          <div class="fact"><span class="dot"></span><span>The shift value is the secret key.</span></div>
+          <div class="fact"><span class="dot"></span><span>Same input letter always maps to the same output letter.</span></div>
+        </div>
+      </section>
+      <div class="notice"><b>Learning use only</b><br>Classical ciphers are historically important but are not secure by modern standards. Do not use them to protect passwords or sensitive information.</div>
+    </aside>
+  </main>
+  <footer class="footer">CRYPT O LAB · A simple, browser-based cryptography learning tool</footer>
+</div>
+
+<script>
+let currentCipher = 'caesar';
+const $ = id => document.getElementById(id);
+
+const concepts = {
+  caesar: {
+    title: 'Substitution cipher',
+    text: 'A substitution cipher replaces each letter with another letter. The original letter positions remain unchanged.',
+    diagram: '<div class="node">A B C</div><div class="arrow">→</div><div class="node">D E F</div>',
+    facts: [
+      'Letters are replaced, not rearranged.',
+      'The shift value is the secret key.',
+      'The same input letter maps to the same output letter.'
+    ]
+  },
+  rail: {
+    title: 'Transposition cipher',
+    text: 'A transposition cipher keeps the original letters but changes their positions. Rail Fence arranges them in a zigzag pattern.',
+    diagram: '<div class="node">H E L L O</div><div class="arrow">↘</div><div class="node">H O L E L</div>',
+    facts: [
+      'Letters are rearranged, not replaced.',
+      'The number of rails is the key.',
+      'The receiver needs the same rail count to reverse the process.'
+    ]
+  }
+};
+
+function updateConcept() {
+  const c = concepts[currentCipher];
+  $('conceptTitle').textContent = c.title;
+  $('conceptText').textContent = c.text;
+  $('diagram').innerHTML = c.diagram;
+  $('facts').innerHTML = c.facts.map(f => '<div class="fact"><span class="dot"></span><span>' + f + '</span></div>').join('');
+}
+
+document.querySelectorAll('.cipher-option').forEach(btn => btn.addEventListener('click', () => {
+  currentCipher = btn.dataset.cipher;
+  document.querySelectorAll('.cipher-option').forEach(b => {
+    const active = b === btn;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-selected', String(active));
+  });
+  $('caesarFields').classList.toggle('hidden', currentCipher !== 'caesar');
+  $('railFields').classList.toggle('hidden', currentCipher !== 'rail');
+  $('status').textContent = '';
+  updateConcept();
+}));
+
+function caesar(text, shift) {
+  shift = ((shift % 26) + 26) % 26;
+  return [...text].map(ch => {
+    const code = ch.charCodeAt(0);
+    if (code >= 65 && code <= 90) return String.fromCharCode((code - 65 + shift) % 26 + 65);
+    if (code >= 97 && code <= 122) return String.fromCharCode((code - 97 + shift) % 26 + 97);
+    return ch;
+  }).join('');
+}
+function railEncrypt(text, rails) {
+  if (rails < 2 || rails > 20) throw new Error('Choose between 2 and 20 rails.');
+  if (rails >= text.length) return text;
+  const rows = Array.from({length: rails}, () => []);
+  let row = 0, direction = 1;
+  for (const ch of text) {
+    rows[row].push(ch);
+    if (row === 0) direction = 1;
+    else if (row === rails - 1) direction = -1;
+    row += direction;
+  }
+  return rows.map(r => r.join('')).join('');
+}
+function railDecrypt(text, rails) {
+  if (rails < 2 || rails > 20) throw new Error('Choose between 2 and 20 rails.');
+  if (rails >= text.length) return text;
+  const pattern = [];
+  let row = 0, direction = 1;
+  for (let i = 0; i < text.length; i++) {
+    pattern.push(row);
+    if (row === 0) direction = 1;
+    else if (row === rails - 1) direction = -1;
+    row += direction;
+  }
+  const counts = Array(rails).fill(0);
+  pattern.forEach(r => counts[r]++);
+  const railChars = [];
+  let pos = 0;
+  for (const count of counts) {
+    railChars.push([...text.slice(pos, pos + count)]);
+    pos += count;
+  }
+  const indexes = Array(rails).fill(0);
+  return pattern.map(r => railChars[r][indexes[r]++]).join('');
+}
+function run(decrypting) {
+  const text = $('message').value;
+  try {
+    let result;
+    if (currentCipher === 'caesar') {
+      const shift = Number($('shift').value);
+      if (!Number.isInteger(shift) || shift < 0 || shift > 25) throw new Error('Shift must be a whole number from 0 to 25.');
+      result = caesar(text, decrypting ? -shift : shift);
+    } else {
+      const rails = Number($('rails').value);
+      if (!Number.isInteger(rails)) throw new Error('Number of rails must be a whole number.');
+      result = decrypting ? railDecrypt(text, rails) : railEncrypt(text, rails);
+    }
+    $('output').textContent = result;
+    $('status').textContent = decrypting ? 'Decryption complete.' : 'Encryption complete.';
+  } catch (err) {
+    $('output').textContent = 'Unable to process message.';
+    $('status').textContent = err.message;
+  }
+}
+$('encrypt').addEventListener('click', () => run(false));
+$('decrypt').addEventListener('click', () => run(true));
+$('clear').addEventListener('click', () => {
+  $('message').value = '';
+  $('output').textContent = 'Your result will appear here.';
+  $('status').textContent = '';
+  $('message').focus();
+});
+$('copy').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText($('output').textContent);
+    $('status').textContent = 'Output copied to clipboard.';
+  } catch {
+    $('status').textContent = 'Clipboard is unavailable. Select and copy the output manually.';
+  }
+});
+updateConcept();
+</script>
+</body>
+</html>
